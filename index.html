@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#14213d">
+  <title>Smart Center | إدارة السنتر</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets-logo.png">
+</head>
+<body>
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <img src="assets-logo.png" alt="Smart Center" class="auth-logo">
+    <h1>Smart Center</h1><p class="auth-subtitle">سنتر الأزهر — بوابة إدارة السنتر</p>
+    <div id="authNotice" class="auth-notice" role="status"></div>
+    <form id="loginForm" class="auth-form">
+      <label>البريد الإلكتروني<input id="loginEmail" type="email" autocomplete="username" required placeholder="البريد الإلكتروني للمالك"></label>
+      <label>كلمة المرور<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></label>
+      <button class="auth-submit" type="submit">تسجيل الدخول</button>
+    </form>
+    <form id="resetForm" class="auth-form hidden">
+      <label>البريد الإلكتروني<input id="resetEmail" type="email" required placeholder="البريد الإلكتروني"></label>
+      <button class="auth-submit" type="submit">إرسال رابط الاستعادة</button>
+    </form>
+    <form id="passwordForm" class="auth-form hidden">
+      <label>كلمة المرور الجديدة<input id="newPassword" type="password" minlength="8" required placeholder="8 أحرف على الأقل"></label>
+      <button class="auth-submit" type="submit">حفظ كلمة المرور</button>
+    </form>
+    <button id="forgotBtn" class="auth-link" type="button">نسيت كلمة المرور؟</button>
+    <button id="backLoginBtn" class="auth-link hidden" type="button">العودة لتسجيل الدخول</button>
+    <small class="auth-foot">الدخول مخصص لحساب مالك السنتر فقط</small>
+  </div>
+</div>
+<div class="app-shell" id="appShell" hidden>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><img src="assets-logo.png" class="brand-logo" alt="Smart Center"><div><b>Smart Center</b><small>سنتر الأزهر</small></div></div>
+    <div class="side-label">القائمة الرئيسية</div>
+    <nav id="nav">
+      <button class="nav-item active" data-page="dashboard"><span>▦</span> لوحة التحكم</button>
+      <button class="nav-item" data-page="students"><span>♙</span> الطلاب</button>
+      <button class="nav-item" data-page="teachers"><span>♟</span> المدرسون</button>
+      <button class="nav-item" data-page="groups"><span>▤</span> المجموعات</button>
+      <button class="nav-item" data-page="attendance"><span>✓</span> الحضور والغياب</button>
+      <button class="nav-item" data-page="finance"><span>ج</span> الحسابات</button>
+      <button class="nav-item" data-page="subscriptions"><span>◷</span> الاشتراكات</button>
+      <button class="nav-item" data-page="receipts"><span>▧</span> إيصالات الدفع</button>
+      <button class="nav-item" data-page="parents"><span>♧</span> أولياء الأمور</button>
+      <button class="nav-item" data-page="materials"><span>▱</span> المذكرات والملفات</button>
+      <button class="nav-item" data-page="schedule"><span>▦</span> جدول المحاضرات</button>
+      <button class="nav-item" data-page="users"><span>⚙</span> المستخدمون والصلاحيات</button>
+      <button class="nav-item" data-page="settings"><span>☷</span> إعدادات السنتر</button>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> النظام يعمل محليًا <small>نسخة تجريبية</small></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div><h1 id="pageTitle">لوحة التحكم</h1><p id="todayText"></p></div>
+      <div class="top-actions"><button class="icon-btn sound-toggle" id="soundToggle" type="button" title="إيقاف صوت التأكيد" aria-label="إيقاف صوت التأكيد">♫</button><button class="icon-btn" id="backupBtn" title="نسخة احتياطية">⇩</button><button class="icon-btn" id="logoutBtn" type="button" title="تسجيل الخروج">⇥</button><div class="admin-avatar">م</div><div class="admin-info"><b id="adminEmail">مالك السنتر</b><small>مدير النظام</small></div></div>
+    </header>
+    <section id="content" class="content"></section>
+    <footer>Smart Center © <span id="year"></span> — نظام إدارة السنتر التعليمي</footer>
+  </main>
+</div>
+<div id="modalRoot"></div>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
