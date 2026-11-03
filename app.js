@@ -1,18 +1,16 @@
 const $ = s => document.querySelector(s);
+const OWNER_EMAIL='com98525714@gmail.com';
+// Local-only login gate. This is NOT secure authentication on a public GitHub Pages site.
+const OWNER_PASSWORD_SHA256='1f5ac9ae3fe64eaf018f7cd62ff47d86be4e2aab1d9113f99bde30a3fc74df0b';
 const showAuthNotice=(message,isError=false)=>{const n=$('#authNotice');n.textContent=message;n.className='auth-notice show'+(isError?' error':'')};
-function showLoginMode(mode='login'){['loginForm','resetForm','passwordForm'].forEach(id=>$('#'+id).classList.toggle('hidden',id!==mode));$('#forgotBtn').classList.toggle('hidden',mode!=='login');$('#backLoginBtn').classList.toggle('hidden',mode==='login');$('#authNotice').className='auth-notice';}
-async function enterApp(user){currentUser=user;$('#adminEmail').textContent=user.email||'مالك السنتر';$('#authScreen').hidden=true;$('#appShell').hidden=false;render();toast('تم تسجيل الدخول بنجاح');}
-async function signOut(){currentUser=null;await supabaseClient.auth.signOut();$('#appShell').hidden=true;$('#authScreen').hidden=false;showLoginMode('login');}
-$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;b.textContent='جارٍ التحقق...';const {data,error}=await supabaseClient.auth.signInWithPassword({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value});b.disabled=false;b.textContent='تسجيل الدخول';if(error){showAuthNotice('بيانات الدخول غير صحيحة أو تعذر الاتصال: '+error.message,true);return;}await enterApp(data.user);});
-$('#forgotBtn').onclick=()=>{showLoginMode('resetForm');$('#resetEmail').value=$('#loginEmail').value;};$('#backLoginBtn').onclick=()=>showLoginMode('login');
-$('#resetForm').addEventListener('submit',async e=>{e.preventDefault();const {error}=await supabaseClient.auth.resetPasswordForEmail($('#resetEmail').value.trim(),{redirectTo:location.origin+location.pathname});if(error)showAuthNotice(error.message,true);else showAuthNotice('لو البريد مسجل، هيوصلك رابط استعادة كلمة المرور. راجع صندوق الوارد والرسائل غير المرغوب فيها.');});
-$('#passwordForm').addEventListener('submit',async e=>{e.preventDefault();const {error}=await supabaseClient.auth.updateUser({password:$('#newPassword').value});if(error)showAuthNotice(error.message,true);else{showLoginMode('login');showAuthNotice('تم تحديث كلمة المرور. يمكنك الآن تسجيل الدخول.');}});
+function enterApp(){currentUser={email:OWNER_EMAIL};$('#adminEmail').textContent=OWNER_EMAIL;$('#authScreen').hidden=true;$('#appShell').hidden=false;render();}
+function signOut(){sessionStorage.removeItem('smartCenterLocalSession');currentUser=null;$('#appShell').hidden=true;$('#authScreen').hidden=false;$('#loginPassword').value='';showAuthNotice('تم تسجيل الخروج.');}
+async function sha256(value){const bytes=new TextEncoder().encode(value);const digest=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');}
+$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;b.textContent='جارٍ التحقق...';try{const email=$('#loginEmail').value.trim().toLowerCase();const passwordHash=await sha256($('#loginPassword').value);if(email!==OWNER_EMAIL||passwordHash!==OWNER_PASSWORD_SHA256){showAuthNotice('البريد الإلكتروني أو كلمة المرور غير صحيحة.',true);return;}sessionStorage.setItem('smartCenterLocalSession','owner');$('#loginPassword').value='';$('#authNotice').className='auth-notice';enterApp();}catch(err){showAuthNotice('تعذر التحقق على هذا المتصفح. افتح الموقع عبر HTTPS.',true);}finally{b.disabled=false;b.textContent='تسجيل الدخول';}});
+$('#forgotBtn').hidden=true;$('#backLoginBtn').hidden=true;
 $('#logoutBtn').onclick=signOut;
 const $$ = s => [...document.querySelectorAll(s)];
 const storeKey='smartCenterDataV1';
-const SUPABASE_URL='https://zqoytonftnyiubqxabtu.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_CWZkyfBXWrqw_8UAF2oOHw_l3nxC8dD';
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 let currentUser=null;
 const initial={students:[],teachers:[],groups:[],attendance:[],transactions:[],subscriptions:[],parents:[],materials:[],users:[],settings:{name:'Smart Center',phone:'',address:''}};
 let db=load();
@@ -137,12 +135,8 @@ function restore(e){
 }
 function clearData(){if(!confirm('تحذير: سيتم حذف كل البيانات نهائيًا من هذا المتصفح. هل تريد المتابعة؟'))return;db=structuredClone(initial);save();render();toast('تم مسح البيانات')}
 $('#backupBtn').onclick=backup;
-async function boot(){
- const recovery=location.hash.includes('type=recovery');
- if(recovery){showLoginMode('passwordForm');showAuthNotice('اكتب كلمة مرور جديدة لحسابك.');}
- const {data:{session},error}=await supabaseClient.auth.getSession();
- if(error){showAuthNotice('تعذر الاتصال بخدمة تسجيل الدخول: '+error.message,true);return;}
- if(session?.user&&!recovery){await enterApp(session.user);}else{$('#authScreen').hidden=false;$('#appShell').hidden=true;}
- supabaseClient.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY'){showLoginMode('passwordForm');showAuthNotice('اكتب كلمة مرور جديدة لحسابك.');$('#authScreen').hidden=false;$('#appShell').hidden=true;}else if(event==='SIGNED_OUT'){currentUser=null;$('#appShell').hidden=true;$('#authScreen').hidden=false;}});
+function boot(){
+  if(sessionStorage.getItem('smartCenterLocalSession')==='owner') enterApp();
+  else {$('#authScreen').hidden=false;$('#appShell').hidden=true;}
 }
 boot();

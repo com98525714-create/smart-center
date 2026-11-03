@@ -19,16 +19,6 @@
       <label>كلمة المرور<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></label>
       <button class="auth-submit" type="submit">تسجيل الدخول</button>
     </form>
-    <form id="resetForm" class="auth-form hidden">
-      <label>البريد الإلكتروني<input id="resetEmail" type="email" required placeholder="البريد الإلكتروني"></label>
-      <button class="auth-submit" type="submit">إرسال رابط الاستعادة</button>
-    </form>
-    <form id="passwordForm" class="auth-form hidden">
-      <label>كلمة المرور الجديدة<input id="newPassword" type="password" minlength="8" required placeholder="8 أحرف على الأقل"></label>
-      <button class="auth-submit" type="submit">حفظ كلمة المرور</button>
-    </form>
-    <button id="forgotBtn" class="auth-link" type="button">نسيت كلمة المرور؟</button>
-    <button id="backLoginBtn" class="auth-link hidden" type="button">العودة لتسجيل الدخول</button>
     <small class="auth-foot">الدخول مخصص لحساب مالك السنتر فقط</small>
   </div>
 </div>
@@ -66,7 +56,6 @@
 </div>
 <div id="modalRoot"></div>
 <div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 </body>
 </html>
