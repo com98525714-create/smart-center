@@ -33,7 +33,23 @@ const storeKey='smartCenterDataV1';
 let currentUser=null;
 const initial={students:[],teachers:[],groups:[],attendance:[],transactions:[],subscriptions:[],parents:[],materials:[],users:[],settings:{name:'Smart Center',phone:'',address:''}};
 let db=load();
-function load(){try{return {...initial,...JSON.parse(localStorage.getItem(storeKey)||'{}')}}catch(e){return structuredClone(initial)}}
+function load(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(storeKey)||'{}');
+    const data={...initial,...(saved&&typeof saved==='object'?saved:{})};
+    for(const key of ['students','teachers','groups','attendance','transactions','subscriptions','parents','materials','users']){
+      if(!Array.isArray(data[key])) data[key]=[];
+    }
+    if(!data.settings||typeof data.settings!=='object'||Array.isArray(data.settings)){
+      data.settings={...initial.settings};
+    }else{
+      data.settings={...initial.settings,...data.settings};
+    }
+    return data;
+  }catch(e){
+    return {...initial,settings:{...initial.settings}};
+  }
+}
 function save(){
   // بيانات المنصة محفوظة محليًا على هذا المتصفح فقط؛ Supabase مستخدم لتسجيل الدخول لا غير.
   localStorage.setItem(storeKey,JSON.stringify(db));
