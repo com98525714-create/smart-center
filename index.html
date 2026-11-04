@@ -9,20 +9,7 @@
   <link rel="icon" type="image/png" href="assets-logo.png">
 </head>
 <body>
-<div id="authScreen" class="auth-screen">
-  <div class="auth-card">
-    <img src="assets-logo.png" alt="Smart Center" class="auth-logo">
-    <h1>Smart Center</h1><p class="auth-subtitle">سنتر الأزهر — بوابة إدارة السنتر</p>
-    <div id="authNotice" class="auth-notice" role="status"></div>
-    <form id="loginForm" class="auth-form">
-      <label>البريد الإلكتروني<input id="loginEmail" type="email" autocomplete="username" required placeholder="البريد الإلكتروني للمالك"></label>
-      <label>كلمة المرور<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></label>
-      <button class="auth-submit" type="submit">تسجيل الدخول</button>
-    </form>
-    <small class="auth-foot">الدخول مخصص لحساب مالك السنتر فقط</small>
-  </div>
-</div>
-<div class="app-shell" id="appShell" hidden>
+<div class="app-shell" id="appShell">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><img src="assets-logo.png" class="brand-logo" alt="Smart Center"><div><b>Smart Center</b><small>سنتر الأزهر</small></div></div>
     <div class="side-label">القائمة الرئيسية</div>
@@ -48,7 +35,7 @@
     <header class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
       <div><h1 id="pageTitle">لوحة التحكم</h1><p id="todayText"></p></div>
-      <div class="top-actions"><button class="icon-btn sound-toggle" id="soundToggle" type="button" title="إيقاف صوت التأكيد" aria-label="إيقاف صوت التأكيد">♫</button><button class="icon-btn" id="backupBtn" title="نسخة احتياطية">⇩</button><button class="icon-btn" id="logoutBtn" type="button" title="تسجيل الخروج">⇥</button><div class="admin-avatar">م</div><div class="admin-info"><b id="adminEmail">مالك السنتر</b><small>مدير النظام</small></div></div>
+      <div class="top-actions"><button class="icon-btn sound-toggle" id="soundToggle" type="button" title="إيقاف صوت التأكيد" aria-label="إيقاف صوت التأكيد">♫</button><button class="icon-btn" id="backupBtn" title="نسخة احتياطية">⇩</button><div class="admin-avatar">م</div><div class="admin-info"><b id="adminEmail">مالك السنتر</b><small>مدير النظام</small></div></div>
     </header>
     <section id="content" class="content"></section>
     <footer>Smart Center © <span id="year"></span> — نظام إدارة السنتر التعليمي</footer>

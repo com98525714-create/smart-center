@@ -1,33 +1,5 @@
 const $ = s => document.querySelector(s);
-const OWNER_EMAIL='com98525714@gmail.com';
-// Local-only login gate for this static GitHub Pages build. Not secure authentication.
-const OWNER_PASSWORD='aass98525714.';
-const showAuthNotice=(message,isError=false)=>{const n=$('#authNotice');n.textContent=message;n.className='auth-notice show'+(isError?' error':'')};
-function enterApp(){currentUser={email:OWNER_EMAIL};$('#adminEmail').textContent=OWNER_EMAIL;$('#authScreen').hidden=true;$('#appShell').hidden=false;render();}
-function signOut(){sessionStorage.removeItem('smartCenterLocalSession');currentUser=null;$('#appShell').hidden=true;$('#authScreen').hidden=false;$('#loginPassword').value='';showAuthNotice('تم تسجيل الخروج.');}
-$('#loginForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const b=e.target.querySelector('button');
-  const email=$('#loginEmail').value.trim().toLowerCase();
-  const password=$('#loginPassword').value;
-  b.disabled=true;b.textContent='جارٍ التحقق...';
-  try{
-    if(email!==OWNER_EMAIL||password!==OWNER_PASSWORD){
-      showAuthNotice('البريد الإلكتروني أو كلمة المرور غير صحيحة.',true);
-      return;
-    }
-    sessionStorage.setItem('smartCenterLocalSession','owner');
-    $('#loginPassword').value='';
-    $('#authNotice').className='auth-notice';
-    enterApp();
-  }catch(err){
-    showAuthNotice('تعذر إكمال تسجيل الدخول. حدّث الصفحة وحاول مرة أخرى.',true);
-  }finally{
-    b.disabled=false;b.textContent='تسجيل الدخول';
-  }
-});
-$('#forgotBtn').hidden=true;$('#backLoginBtn').hidden=true;
-$('#logoutBtn').onclick=signOut;
+
 const $$ = s => [...document.querySelectorAll(s)];
 const storeKey='smartCenterDataV1';
 let currentUser=null;
@@ -171,7 +143,7 @@ function restore(e){
 function clearData(){if(!confirm('تحذير: سيتم حذف كل البيانات نهائيًا من هذا المتصفح. هل تريد المتابعة؟'))return;db=structuredClone(initial);save();render();toast('تم مسح البيانات')}
 $('#backupBtn').onclick=backup;
 function boot(){
-  if(sessionStorage.getItem('smartCenterLocalSession')==='owner') enterApp();
-  else {$('#authScreen').hidden=false;$('#appShell').hidden=true;}
+  $('#appShell').hidden=false;
+  render();
 }
 boot();
