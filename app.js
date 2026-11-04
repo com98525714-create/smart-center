@@ -5,23 +5,7 @@ const storeKey='smartCenterDataV1';
 let currentUser=null;
 const initial={students:[],teachers:[],groups:[],attendance:[],transactions:[],subscriptions:[],parents:[],materials:[],users:[],settings:{name:'Smart Center',phone:'',address:''}};
 let db=load();
-function load(){
-  try{
-    const saved=JSON.parse(localStorage.getItem(storeKey)||'{}');
-    const data={...initial,...(saved&&typeof saved==='object'?saved:{})};
-    for(const key of ['students','teachers','groups','attendance','transactions','subscriptions','parents','materials','users']){
-      if(!Array.isArray(data[key])) data[key]=[];
-    }
-    if(!data.settings||typeof data.settings!=='object'||Array.isArray(data.settings)){
-      data.settings={...initial.settings};
-    }else{
-      data.settings={...initial.settings,...data.settings};
-    }
-    return data;
-  }catch(e){
-    return {...initial,settings:{...initial.settings}};
-  }
-}
+function load(){try{return {...initial,...JSON.parse(localStorage.getItem(storeKey)||'{}')}}catch(e){return structuredClone(initial)}}
 function save(){
   // بيانات المنصة محفوظة محليًا على هذا المتصفح فقط؛ Supabase مستخدم لتسجيل الدخول لا غير.
   localStorage.setItem(storeKey,JSON.stringify(db));
@@ -142,8 +126,5 @@ function restore(e){
 }
 function clearData(){if(!confirm('تحذير: سيتم حذف كل البيانات نهائيًا من هذا المتصفح. هل تريد المتابعة؟'))return;db=structuredClone(initial);save();render();toast('تم مسح البيانات')}
 $('#backupBtn').onclick=backup;
-function boot(){
-  $('#appShell').hidden=false;
-  render();
-}
+function boot(){ $('#appShell').hidden=false; render(); }
 boot();
